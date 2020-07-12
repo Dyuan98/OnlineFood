@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuan.dao.FoodMapper">
+
+    <!--    添加新食品-->
+    <insert id="addFood" parameterType="Food">
+        insert into onlinefood.food (fname, ftype, faccount, price, introduce, imgUrl)
+        values (#{fname},#{ftype},#{faccount},#{price},#{introduce},#{imgUrl})
+    </insert>
+
+    <!--    查询符合条件的用户总个数-->
+    <select id="queryCountsByCondition" parameterType="Food" resultType="int">
+        select count(fid) from onlinefood.food where 1 = 1
+        <if test=" fname != null and fname != '' " >
+            and fname like '%' #{fname} '%'
+        </if>
+        <if test=" ftype != null and ftype != '' " >
+            and ftype like '%' #{ftype} '%'
+        </if>
+        <if test=" introduce != null and introduce != '' " >
+            and introduce like '%' #{introduce} '%'
+        </if>
+    </select>
+
+    <!--    查询符合条件的用户列表-->
+    <select id="queryFoodByCondition" parameterType="Food"  resultType="Food">
+        select * from onlinefood.food where 1 = 1
+        <if test=" fname != null and fname != '' " >
+            and fname like '%' #{fname} '%'
+        </if>
+        <if test=" ftype != null and ftype != '' " >
+            and ftype like '%' #{ftype} '%'
+        </if>
+        <if test=" introduce != null and introduce != '' " >
+            and introduce like '%' #{introduce} '%'
+        </if>
+        limit #{startRows}, #{pageSize}
+    </select>
+
+    <!--    根据fid删除指定商品-->
+    <delete id="delFoodByFid" parameterType="int">
+        delete from onlinefood.food where fid = #{fid}
+    </delete>
+
+    <!--    根据id查询指定用户详细信息-->
+    <select id="queryFoodById" parameterType="int" resultType="Food">
+        select * from  onlinefood.food where fid = #{fid}
+    </select>
+
+    <!--    修改食品信息，新传来的食品信息根据id把之前的覆盖-->
+    <update id="modifyFoodById" parameterType="Food" >
+        update onlinefood.food set fname = #{fname}, ftype = #{ftype}, faccount = #{faccount},
+        price = #{price}, introduce = #{introduce}, imgUrl = #{imgUrl} where fid = #{fid}
+    </update>
+
+    <!-- 无条件查询食品   -->
+    <select id="queryFood" resultType="Food">
+        select  * from  onlinefood.food
+    </select>
+
+    <!-- 无条件查询个数   -->
+    <select id="queryCounts" resultType="int">
+        select count(fid) from onlinefood.food
+    </select>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 扫描service相关的bean -->
+    <context:component-scan base-package="com.yuan.service" />
+
+    <!--UserServiceImpl注入到IOC容器中-->
+    <bean id="UserServiceImpl" class="com.yuan.service.UserServiceImpl">
+        <property name="UserMapper" ref="userMapper"/>
+    </bean>
+
+    <!--FoodServiceImpl注入到IOC容器中-->
+    <bean id="FoodServiceImpl" class="com.yuan.service.FoodServiceImpl">
+        <property name="FoodMapper" ref="foodMapper"/>
+    </bean>
+
+    <!--FoodServiceImpl注入到IOC容器中-->
+    <bean id="OrderServiceImpl" class="com.yuan.service.OrderServiceImpl">
+        <property name="OrderMapper" ref="orderMapper"/>
+    </bean>
+
+    <!--AdminServiceImpl注入到IOC容器中-->
+    <bean id="AdminServiceImpl" class="com.yuan.service.AdminServiceImpl">
+        <property name="AdminMapper" ref="adminMapper"/>
+    </bean>
+
+    <!--MessageServiceImpl注入到IOC容器中-->
+    <bean id="MessageServiceImpl" class="com.yuan.service.MessageServiceImpl">
+        <property name="MessageMapper" ref="messageMapper"/>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+</beans>

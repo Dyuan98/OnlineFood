@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuan.dao.OrderMapper">
+
+    <!--    添加新的订单-->
+    <insert id="addOrder" parameterType="Order">
+        insert into onlinefood.orderform value (0,#{uid},#{fid},#{oTime},#{oStatus})
+    </insert>
+
+    <!--    通过用户id查询订单-->
+    <select id="queryOrderByUid" parameterType="int" resultMap="userOrder">
+        select f.fid fid, f.fName fname,f.price price, o.otime otime, o.oid oid
+        from user u, food f, orderform o
+        where u.id = o.uid and f.fid = o.fid and u.id = #{id} and o.ostatus = #{status}
+    </select>
+    <resultMap id="userOrder" type="Order">
+        <result property="oTime" column="otime"/>
+        <result property="oid" column="oid"/>
+        <association property="food" javaType="Food">
+            <result property="fid" column="fid"/>
+            <result property="fname" column="fname"/>
+            <result property="price" column="price"/>
+        </association>
+    </resultMap>
+
+    <!--   根据order的oid删除订单 -->
+    <delete id="delOrder" parameterType="int" >
+        delete from onlinefood.orderform where oid = #{oid}
+    </delete>
+
+    <!--    付款-->
+    <update id="pay" parameterType="Order">
+        update onlinefood.orderform set ostatus = #{oStatus},otime = #{oTime} where oid = #{oid}
+    </update>
+
+    <!--查询所有订单 ,以及订单中用户和食品的详细信息  -->
+    <select id="queryAllOrder" resultMap="allOrder">
+        select f.fid fid, f.fName fname,f.price price, o.otime otime, o.oid oid, u.name name,o.ostatus ostatus
+        from user u, food f, orderform o  where u.id = o.uid and f.fid = o.fid
+    </select>
+    <resultMap id="allOrder" type="Order">
+        <result property="oTime" column="otime"/>
+        <result property="oid" column="oid"/>
+        <result property="oStatus" column="ostatus"/>
+        <association property="food" javaType="Food">
+            <result property="fid" column="fid"/>
+            <result property="fname" column="fname"/>
+            <result property="price" column="price"/>
+        </association>
+        <association property="user" javaType="User">
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+</mapper>

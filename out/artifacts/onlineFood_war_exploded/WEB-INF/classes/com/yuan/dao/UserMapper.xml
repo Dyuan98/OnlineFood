@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuan.dao.UserMapper">
+    <!--查询全部User-->
+    <select id="queryAllUser" resultType="User">
+      SELECT * from onlinefood.user
+   </select>
+
+    <!--  分页查询用户  -->
+    <select id="queryUserByPage"  resultType="User" >
+        select * from onlinefood.user limit  #{start}, #{pageSize}
+    </select>
+
+    <!--插入用户数据-->
+    <insert id="addUser" parameterType="User" >
+        insert into onlinefood.user(name,pwd,phone,address,money)
+        values (#{name},#{pwd},#{phone},#{address},0)
+    </insert>
+
+<!--    判断用户是否存在，用于用户登陆检测-->
+    <select id="judgeUserExit" parameterType="User" resultType="User">
+        select * from user where name = #{name} and pwd = #{pwd}
+    </select>
+
+    <!--  查询总行数  -->
+    <select id="queryCounts" resultType="int">
+        select count(id) from onlinefood.user
+    </select>
+
+    <!--根据id删除对应用户信息    -->
+    <delete id="delById" parameterType="int">
+        delete from onlinefood.user where id = #{id}
+    </delete>
+
+<!--    查询符合条件的用户总个数-->
+    <select id="queryCountsByCondition" parameterType="User" resultType="int">
+        select count(id) from onlinefood.user where 1 = 1
+        <if test=" name != null and name != '' " >
+             and name like '%' #{name} '%'
+        </if>
+        <if test=" address != null and address != '' " >
+            and address like '%' #{address} '%'
+        </if>
+        <if test=" phone != null and phone != '' " >
+            and phone like '%' #{phone} '%'
+        </if>
+    </select>
+
+<!--    查询符合条件的用户列表-->
+    <select id="queryUserByCondition" parameterType="User"  resultType="User">
+        select * from onlinefood.user where 1 = 1
+        <if test=" name != null and name != '' " >
+            and name like '%' #{name} '%'
+        </if>
+        <if test=" address != null and address != '' " >
+            and address like '%' #{address} '%'
+        </if>
+        <if test=" phone != null and phone != '' " >
+            and phone like '%' #{phone} '%'
+        </if>
+            limit #{startRows}, #{pageSize}
+    </select>
+
+<!--    修改用户信息-->
+    <update id="modifyUserById" parameterType="User">
+        update onlinefood.user set name = #{name}, pwd = #{pwd}, phone = #{phone},
+            address = #{address}, money = #{money}  where id = #{id}
+    </update>
+
+<!--    根据id查找用户信息-->
+    <select id="queryUserById" parameterType="int" resultType="User">
+        select * from onlinefood.user where id = #{id}
+    </select>
+
+    <!--    用户自己修改用户信息，排除金额修改-->
+    <update id="uModifyUser" parameterType="User">
+        update onlinefood.user set name = #{name}, pwd = #{pwd}, phone = #{phone},
+            address = #{address}  where id = #{id}
+    </update>
+
+    <!--    用户充值-->
+    <update id="userRecharge" parameterType="User">
+        update onlinefood.user set money = money + #{money} where id = #{id}
+    </update>
+
+    <!--    用户下单，扣除相应金额-->
+    <update id="userPayMoney" parameterType="User">
+        update onlinefood.user set money = money - #{money} where id = #{id}
+    </update>
+</mapper>

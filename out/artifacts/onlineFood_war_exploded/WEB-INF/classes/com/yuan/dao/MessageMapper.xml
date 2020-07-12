@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuan.dao.MessageMapper">
+
+    <!--添加留言-->
+    <insert id="addMessage" parameterType="Message">
+        insert into message values (0,#{uid},#{fid},#{mTime},#{evaluate})
+    </insert>
+
+    <!--查询所有留言,以及留言的食品和用户信息-->
+    <select id="queryMessages" resultMap="allMessages">
+        select  f.fid fid,f.fName fname,f.price price,f.imgUrl imgUrl, u.name name, m.mtime mtime, m.mid mid,m.evaluate evaluate
+        from user u, food f, message m  where u.id = m.uid and f.fid = m.fid
+    </select>
+    <resultMap id="allMessages" type="Message">
+        <result property="mTime" column="mtime"/>
+        <result property="mid" column="mid"/>
+        <result property="evaluate" column="evaluate"/>
+        <association property="food" javaType="Food">
+            <result property="fid" column="fid"/>
+            <result property="fname" column="fname"/>
+            <result property="price" column="price"/>
+            <result property="imgUrl" column="imgUrl"/>
+        </association>
+        <association property="user" javaType="User">
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+</mapper>

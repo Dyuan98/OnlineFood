@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuan.dao.AdminMapper">
+
+    <!--    判断用户是否存在，用于用户登陆检测-->
+    <select id="judgeAdminExit" parameterType="Admin" resultType="int">
+        select count(aid) from admin where aname = #{aName} and password = #{password}
+    </select>
+</mapper>
